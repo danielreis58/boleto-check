@@ -1,0 +1,32 @@
+service: boleto-check
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+functions:
+  boleto:
+    handler: handler.boleto
+    events:
+      - httpApi:
+          path: /boleto/{boletoNumber}
+          method: get
+  boleto-titulo:
+    handler: handler.boletoTitulo
+    events:
+      - httpApi:
+          path: /boleto-titulo/{boletoNumber}
+          method: get
+  boleto-convenio:
+    handler: handler.boletoConvenio
+    events:
+      - httpApi:
+          path: /boleto-convenio/{boletoNumber}
+          method: get
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
