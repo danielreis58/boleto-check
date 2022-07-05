@@ -1,5 +1,6 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
 import schemaGet from './schema/get'
+import schemaPost from './schema/post'
 
 const inputValidate = (event: APIGatewayProxyEventV2) => {
   const input = {
@@ -16,6 +17,9 @@ const inputValidate = (event: APIGatewayProxyEventV2) => {
   switch (event?.requestContext?.http?.method?.toLowerCase()) {
     case 'get':
       schema = schemaGet
+      break
+    case 'post':
+      schema = schemaPost
       break
   }
 

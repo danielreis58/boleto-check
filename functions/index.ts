@@ -1,5 +1,6 @@
 import { boleto } from './boleto'
-import { boletoConvenio } from './boletoconvenio'
-import { boletoTitulo } from './boletotitulo'
+import { boletoConvenio } from './boletoConvenio'
+import { boletoGenerator } from './boletoGenerator'
+import { boletoTitulo } from './boletoTitulo'
 
-export { boleto, boletoConvenio, boletoTitulo }
+export { boleto, boletoConvenio, boletoTitulo, boletoGenerator }

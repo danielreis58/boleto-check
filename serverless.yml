@@ -12,20 +12,26 @@ functions:
     handler: handler.boleto
     events:
       - httpApi:
+          method: get
           path: /boleto/{boletoNumber}
-          method: get
-  boleto-titulo:
-    handler: handler.boletoTitulo
-    events:
-      - httpApi:
-          path: /boleto-titulo/{boletoNumber}
-          method: get
   boleto-convenio:
     handler: handler.boletoConvenio
     events:
       - httpApi:
-          path: /boleto-convenio/{boletoNumber}
           method: get
+          path: /boleto-convenio/{boletoNumber}
+  boleto-titulo:
+    handler: handler.boletoTitulo
+    events:
+      - httpApi:
+          method: get
+          path: /boleto-titulo/{boletoNumber}
+  boleto-generator:
+    handler: handler.boletoGenerator
+    events:
+      - httpApi:
+          method: post
+          path: /boleto
 
 plugins:
   - serverless-plugin-typescript
