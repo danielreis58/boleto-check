@@ -1,4 +1,5 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
+import { CustomError } from '../../errors/CustomError'
 import schemaGet from './schema/get'
 
 const inputValidate = (event: APIGatewayProxyEventV2) => {
@@ -23,11 +24,11 @@ const inputValidate = (event: APIGatewayProxyEventV2) => {
     const { error } = schema.validate(input, options)
 
     if (error) {
-      const message = error.details.map((detail) =>
+      const details = error.details.map((detail) =>
         detail.message.replace(/(")|(")/g, '')
       )
 
-      throw { message, code: 400 }
+      throw new CustomError('Input validate', details)
     }
   }
 }

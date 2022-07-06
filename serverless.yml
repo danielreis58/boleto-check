@@ -13,19 +13,19 @@ functions:
     events:
       - httpApi:
           method: get
-          path: /boleto/{boletoNumber}
+          path: /boleto/{boletoDigits}
   boleto-convenio:
     handler: handler.boletoConvenio
     events:
       - httpApi:
           method: get
-          path: /boleto-convenio/{boletoNumber}
+          path: /boleto-convenio/{boletoDigits}
   boleto-titulo:
     handler: handler.boletoTitulo
     events:
       - httpApi:
           method: get
-          path: /boleto-titulo/{boletoNumber}
+          path: /boleto-titulo/{boletoDigits}
   boleto-generator:
     handler: handler.boletoGenerator
     events:

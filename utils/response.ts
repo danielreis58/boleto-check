@@ -1,3 +1,5 @@
+import { CustomError } from '../errors/CustomError'
+
 export const responseClient = (data: object, status = 200) => {
   return {
     statusCode: status,
@@ -17,6 +19,8 @@ export const responseClient = (data: object, status = 200) => {
 
 export const errorResponse = (error: unknown) => {
   let code = 500
+  let message = 'Internal server error'
+  let details: string[] = []
 
   // FOR DEBUGGING
   console.log(
@@ -25,18 +29,16 @@ export const errorResponse = (error: unknown) => {
     '<======================== ERROR'
   )
 
-  if (Number.isInteger(error?.code)) {
-    code = error.code
+  if (error instanceof CustomError) {
+    code = error.statusCode
+    message = error.getErrorMessage()
+    details = error.getErrorDetails()
   }
-
-  const message =
-    code !== 500
-      ? error?.message || 'Internal server error'
-      : 'Internal server error'
 
   const data = {
     error: true,
-    message
+    message,
+    details
   }
 
   return responseClient(data, code)
