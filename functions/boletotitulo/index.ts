@@ -6,7 +6,7 @@ import inputValidate from '../../validate/boletotitulo'
 export const boletoTitulo = async (event: APIGatewayProxyEventV2) => {
   try {
     inputValidate(event)
-    const { boletoDigits } = event?.pathParameters || {}
+    const { boletoDigits = '' } = event?.pathParameters || {}
 
     const data = validateTitulo(boletoDigits)
     return responseClient(data)
