@@ -1,6 +1,5 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { validateConvenio } from '../../utils/boleto'
-
 import { errorResponse, responseClient } from '../../utils/response'
 import inputValidate from '../../validate/boletocovenio'
 
