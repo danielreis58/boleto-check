@@ -1,0 +1,129 @@
+swagger: "2.0"
+info:
+  description: "This is a serverless API for validating Brazilian boletos"
+  version: "1.0.0"
+  title: "Boleto Check"
+  contact:
+    email: "danielpinheiroreis@gmail.com"
+host: "9ughgxcbd0.execute-api.us-east-1.amazonaws.com"
+schemes:
+  - "https"
+paths:
+  /boleto/{boletoDigits}:
+    get:
+      tags:
+        - Endpoints
+      summary: "Validate boleto convênios and boleto títulos"
+      description: "This api validates boleto convênios (48 length) and boletos títulos (47 length)"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "boletoDigits"
+          in: "path"
+          description: "Boleto number (only numbers)"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            properties:
+              status:
+                type: "integer"
+              data:
+                $ref: "#/definitions/Boleto"
+        "400":
+          description: "unsuccessful operation"
+          schema:
+            properties:
+              status:
+                type: "integer"
+              data:
+                $ref: "#/definitions/Error"
+  /boleto-convenio/{boletoDigits}:
+    get:
+      tags:
+        - Endpoints
+      summary: "Validate boleto convênios"
+      description: "This api validates boleto convênios (48 length)"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "boletoDigits"
+          in: "path"
+          description: "Boleto number (only numbers)"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            properties:
+              status:
+                type: "integer"
+              data:
+                $ref: "#/definitions/Boleto"
+        "400":
+          description: "unsuccessful operation"
+          schema:
+            properties:
+              status:
+                type: "integer"
+              data:
+                $ref: "#/definitions/Error"
+  /boleto-titulo/{boletoDigits}:
+    get:
+      tags:
+        - Endpoints
+      summary: "Validate boleto títulos"
+      description: "This api validates boleto títulos (47 length)"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "boletoDigits"
+          in: "path"
+          description: "Boleto number (only numbers)"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            properties:
+              status:
+                type: "integer"
+              data:
+                $ref: "#/definitions/Boleto"
+        "400":
+          description: "unsuccessful operation"
+          schema:
+            properties:
+              status:
+                type: "integer"
+              data:
+                $ref: "#/definitions/Error"
+definitions:
+  Boleto:
+    type: "object"
+    properties:
+      barCode:
+        type: "string"
+      amount:
+        type: "integer"
+      expirationDate:
+        type: "string"
+        format: date-time
+  Error:
+    type: "object"
+    properties:
+      error:
+        type: "boolean"
+      message:
+        type: "string"
+      details:
+        type: "array"
+        items:
+          type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

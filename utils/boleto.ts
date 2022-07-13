@@ -1,7 +1,77 @@
 import { add, compareAsc, format } from 'date-fns'
 import { CustomError } from '../errors/CustomError'
 
-type boletoType = 'convenio' | 'titulo'
+const calcMod11 = (field: string) => {
+  const sequence = [4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+
+  let sum = 0
+
+  for (let i = 0; i < field.length; i++) {
+    sum += parseInt(field[i]) * sequence[i]
+  }
+
+  const mod11 = sum % 11
+
+  let dv
+
+  if (mod11 === 0 || mod11 === 1) {
+    dv = 0
+  } else if (mod11 === 10) {
+    dv = 1
+  } else {
+    dv = 11 - mod11
+  }
+
+  return dv
+}
+
+const calcMod10 = (field: string) => {
+  let sum = 0
+  let mult = 2
+
+  for (let i = field.length - 1; i >= 0; i--) {
+    const num = parseInt(field.charAt(i))
+
+    let s
+
+    s = mult * num
+
+    if (s > 9) {
+      s = s.toString()
+      s = parseInt(s.charAt(0)) + parseInt(s.charAt(1))
+    }
+
+    sum += s
+
+    mult = mult === 2 ? 1 : 2
+  }
+
+  const mod10 = sum % 10
+
+  let dv
+
+  if (mod10 === 0) {
+    dv = 0
+  } else {
+    dv = 10 - mod10
+  }
+
+  return dv
+}
+
+const getReferDate = (refer?: Date): Date => {
+  const now = new Date()
+  now.setUTCHours(0, 0, 0, 0)
+
+  const referDate = refer || new Date(1997, 9, 7, 0, 0, 0)
+  const nextReferDate = add(referDate, { days: 10000 })
+
+  if (compareAsc(now, nextReferDate) >= 0) {
+    return getReferDate(nextReferDate)
+  } else {
+    return referDate
+  }
+}
 
 const getType = (boleto: string) => {
   if (boleto.length === 47) {
@@ -13,113 +83,172 @@ const getType = (boleto: string) => {
   return 'invalid'
 }
 
-const getBarCode = (boleto: string, type: boletoType) => {
-  switch (type) {
-    case 'convenio':
-      return (
-        boleto.substring(0, 11) +
-        boleto.substring(12, 23) +
-        boleto.substring(24, 35) +
-        boleto.substring(36, 47)
-      )
-    case 'titulo':
-      return (
-        boleto.substring(0, 4) +
-        boleto.charAt(32) +
-        boleto.substring(33, 47) +
-        boleto.substring(4, 9) +
-        boleto.substring(10, 20) +
-        boleto.substring(21, 31)
-      )
+const convenioGetIdentifier = (boleto: string) => {
+  const id = boleto.charAt(2)
+
+  switch (id) {
+    case '6':
+      return {
+        mod: 10,
+        effective: true
+      }
+    case '7':
+      return {
+        mod: 10,
+        effective: false
+      }
+    case '8':
+      return {
+        mod: 11,
+        effective: true
+      }
+    case '9':
+      return {
+        mod: 11,
+        effective: false
+      }
     default:
-      throw new CustomError('Invalid boleto type')
+      throw new CustomError('Invalid boleto', ['identifier'])
   }
 }
 
-const getAmount = (boleto: string, type: boletoType) => {
-  switch (type) {
-    case 'convenio': {
-      const amountStr = boleto.substring(5, 11) + boleto.substring(12, 16)
-      const amountInt = parseInt(amountStr)
+const convenioValidateDV = (boleto: string) => {
+  let boletoCk = ''
 
-      const amount = amountInt / 100
-      return amount
-    }
-    case 'titulo': {
-      const amountStr = boleto.substring(37, 47)
-      const amountInt = parseInt(amountStr)
+  const identifier = convenioGetIdentifier(boleto)
 
-      const amount = amountInt / 100
-      return amount
-    }
-    default:
-      throw new CustomError('Invalid boleto type')
+  if (identifier.mod === 10) {
+    boletoCk =
+      boleto.substring(0, 11) +
+      calcMod10(boleto.substring(0, 11)) +
+      boleto.substring(12, 23) +
+      calcMod10(boleto.substring(12, 23)) +
+      boleto.substring(24, 35) +
+      calcMod10(boleto.substring(24, 35)) +
+      boleto.substring(36, 47) +
+      calcMod10(boleto.substring(36, 47))
+  } else {
+    boletoCk =
+      boleto.substring(0, 11) +
+      calcMod11(boleto.substring(0, 11)) +
+      boleto.substring(12, 23) +
+      calcMod11(boleto.substring(12, 23)) +
+      boleto.substring(24, 35) +
+      calcMod11(boleto.substring(24, 35)) +
+      boleto.substring(36, 47) +
+      calcMod11(boleto.substring(36, 47))
   }
+
+  console.log('boletoRc', boleto)
+  console.log('boletoCk', boletoCk)
+
+  if (boletoCk === boleto) {
+    return true
+  }
+
+  throw new CustomError('Invalid boleto', ['dv'])
 }
 
-const getExpirationDate = (boleto: string, type: boletoType) => {
-  switch (type) {
-    case 'convenio': {
-      const dueStr = boleto.substring(26, 34)
+const tituloValidateDV = (boleto: string) => {
+  const boletoCk =
+    boleto.substring(0, 9) +
+    calcMod10(boleto.substring(0, 9)) +
+    boleto.substring(10, 20) +
+    calcMod10(boleto.substring(10, 20)) +
+    boleto.substring(21, 31) +
+    calcMod10(boleto.substring(21, 31)) +
+    boleto.substring(32, 47)
 
-      const year = dueStr.substring(0, 4)
-      const yearInt = parseInt(year)
+  console.log('boletoCk', boletoCk)
 
-      const month = dueStr.substring(4, 6)
-      const monthInt = parseInt(month)
-
-      const day = dueStr.substring(6, 8)
-      const dayInt = parseInt(day)
-
-      let expirationDate = null
-
-      if (monthInt >= 1 && monthInt <= 12 && dayInt >= 1 && dayInt <= 31) {
-        expirationDate = format(
-          new Date(yearInt, monthInt - 1, dayInt, 0, 0, 0),
-          'yyyy-MM-dd'
-        )
-      }
-
-      return expirationDate
-    }
-    case 'titulo': {
-      const dueStr = boleto.substring(33, 37)
-      const dueInt = parseInt(dueStr)
-
-      let expirationDate = null
-
-      if (dueInt !== 0) {
-        const now = new Date()
-        const referDate = new Date(1997, 9, 7, 0, 0, 0)
-        console.log('referDate', referDate)
-        const referDate2 = add(referDate, { days: 10000 })
-        console.log('referDate2', referDate2)
-        const referDate3 = add(referDate2, { days: 10000 })
-        console.log('referDate3', referDate3)
-
-        if (compareAsc(now, add(referDate, { days: 9999 }))) {
-        }
-        expirationDate = format(
-          add(referDate, {
-            days: dueInt
-          }),
-          'yyyy-MM-dd'
-        )
-      }
-
-      return expirationDate
-    }
-    default:
-      throw new CustomError('Invalid boleto type')
+  if (boletoCk === boleto) {
+    return true
   }
+  throw new CustomError('Invalid boleto', ['dv'])
+}
+
+const convenioGetBarcode = (boleto: string) =>
+  boleto.substring(0, 11) +
+  boleto.substring(12, 23) +
+  boleto.substring(24, 35) +
+  boleto.substring(36, 47)
+
+const tituloGetBarcode = (boleto: string) =>
+  boleto.substring(0, 4) +
+  boleto.charAt(32) +
+  boleto.substring(33, 47) +
+  boleto.substring(4, 9) +
+  boleto.substring(10, 20) +
+  boleto.substring(21, 31)
+
+const convenioGetAmount = (boleto: string) => {
+  const amountStr = boleto.substring(5, 11) + boleto.substring(12, 16)
+  const amountInt = parseInt(amountStr)
+
+  const amount = amountInt / 100
+  return amount
+}
+
+const tituloGetAmount = (boleto: string) => {
+  const amountStr = boleto.substring(37, 47)
+  const amountInt = parseInt(amountStr)
+
+  const amount = amountInt / 100
+  return amount
+}
+
+const convenioGetExpDate = (boleto: string) => {
+  const dueStr = boleto.substring(26, 34)
+
+  const year = dueStr.substring(0, 4)
+  const yearInt = parseInt(year)
+
+  const month = dueStr.substring(4, 6)
+  const monthInt = parseInt(month)
+
+  const day = dueStr.substring(6, 8)
+  const dayInt = parseInt(day)
+
+  let expirationDate = null
+
+  if (monthInt >= 1 && monthInt <= 12 && dayInt >= 1 && dayInt <= 31) {
+    expirationDate = format(
+      new Date(yearInt, monthInt - 1, dayInt, 0, 0, 0),
+      'yyyy-MM-dd'
+    )
+  }
+
+  return expirationDate
+}
+
+const tituloGetExpDate = (boleto: string) => {
+  const dueStr = boleto.substring(33, 37)
+  const dueInt = parseInt(dueStr)
+
+  let expirationDate = null
+
+  if (dueInt !== 0) {
+    const referDate = getReferDate()
+
+    expirationDate = format(
+      add(referDate, {
+        days: dueInt
+      }),
+      'yyyy-MM-dd'
+    )
+  }
+
+  return expirationDate
 }
 
 export const validateConvenio = (boleto: string) => {
-  const barCode = getBarCode(boleto, 'convenio')
+  convenioValidateDV(boleto)
 
-  const amount = getAmount(boleto, 'convenio')
+  const barCode = convenioGetBarcode(boleto)
 
-  const expirationDate = getExpirationDate(boleto, 'convenio')
+  const amount = convenioGetAmount(boleto)
+
+  const expirationDate = convenioGetExpDate(boleto)
 
   return {
     barCode,
@@ -129,11 +258,13 @@ export const validateConvenio = (boleto: string) => {
 }
 
 export const validateTitulo = (boleto: string) => {
-  const barCode = getBarCode(boleto, 'titulo')
+  tituloValidateDV(boleto)
 
-  const amount = getAmount(boleto, 'titulo')
+  const barCode = tituloGetBarcode(boleto)
 
-  const expirationDate = getExpirationDate(boleto, 'titulo')
+  const amount = tituloGetAmount(boleto)
+
+  const expirationDate = tituloGetExpDate(boleto)
 
   return {
     barCode,
@@ -153,6 +284,6 @@ export const validateBoleto = (boleto: string) => {
       return validateConvenio(boleto)
 
     default:
-      throw new CustomError('Invalid boleto type')
+      throw new CustomError('Invalid boleto', ['type'])
   }
 }

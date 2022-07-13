@@ -26,12 +26,6 @@ functions:
       - httpApi:
           method: get
           path: /boleto-titulo/{boletoDigits}
-  boleto-generator:
-    handler: handler.boletoGenerator
-    events:
-      - httpApi:
-          method: post
-          path: /boleto
 
 plugins:
   - serverless-plugin-typescript
