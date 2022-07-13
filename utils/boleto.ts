@@ -115,6 +115,10 @@ const convenioGetIdentifier = (boleto: string) => {
 const convenioValidateDV = (boleto: string) => {
   let boletoCk = ''
 
+  if (boleto.charAt(0) !== '8') {
+    throw new CustomError('Invalid boleto', ['product identifier'])
+  }
+
   const identifier = convenioGetIdentifier(boleto)
 
   if (identifier.mod === 10) {
@@ -139,9 +143,6 @@ const convenioValidateDV = (boleto: string) => {
       calcMod11(boleto.substring(36, 47))
   }
 
-  console.log('boletoRc', boleto)
-  console.log('boletoCk', boletoCk)
-
   if (boletoCk === boleto) {
     return true
   }
@@ -158,8 +159,6 @@ const tituloValidateDV = (boleto: string) => {
     boleto.substring(21, 31) +
     calcMod10(boleto.substring(21, 31)) +
     boleto.substring(32, 47)
-
-  console.log('boletoCk', boletoCk)
 
   if (boletoCk === boleto) {
     return true
