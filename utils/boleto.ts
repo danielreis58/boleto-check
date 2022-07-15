@@ -75,15 +75,15 @@ const getReferDate = (refer?: Date): Date => {
 
 const getType = (boleto: string) => {
   if (boleto.length === 47) {
-    return 'titulo'
+    return '47'
   }
   if (boleto.length === 48) {
-    return 'convenio'
+    return '48'
   }
   return 'invalid'
 }
 
-const convenioGetIdentifier = (boleto: string) => {
+const getIdentifier48 = (boleto: string) => {
   const id = boleto.charAt(2)
 
   switch (id) {
@@ -112,14 +112,14 @@ const convenioGetIdentifier = (boleto: string) => {
   }
 }
 
-const convenioValidateDV = (boleto: string) => {
+const validateDV48 = (boleto: string) => {
   let boletoCk = ''
 
   if (boleto.charAt(0) !== '8') {
     throw new CustomError('Invalid boleto', ['product identifier'])
   }
 
-  const identifier = convenioGetIdentifier(boleto)
+  const identifier = getIdentifier48(boleto)
 
   if (identifier.mod === 10) {
     boletoCk =
@@ -150,7 +150,7 @@ const convenioValidateDV = (boleto: string) => {
   throw new CustomError('Invalid boleto', ['dv'])
 }
 
-const tituloValidateDV = (boleto: string) => {
+const validateDV47 = (boleto: string) => {
   const boletoCk =
     boleto.substring(0, 9) +
     calcMod10(boleto.substring(0, 9)) +
@@ -166,13 +166,13 @@ const tituloValidateDV = (boleto: string) => {
   throw new CustomError('Invalid boleto', ['dv'])
 }
 
-const convenioGetBarcode = (boleto: string) =>
+const getBarcode48 = (boleto: string) =>
   boleto.substring(0, 11) +
   boleto.substring(12, 23) +
   boleto.substring(24, 35) +
   boleto.substring(36, 47)
 
-const tituloGetBarcode = (boleto: string) =>
+const getBarcode47 = (boleto: string) =>
   boleto.substring(0, 4) +
   boleto.charAt(32) +
   boleto.substring(33, 47) +
@@ -180,7 +180,7 @@ const tituloGetBarcode = (boleto: string) =>
   boleto.substring(10, 20) +
   boleto.substring(21, 31)
 
-const convenioGetAmount = (boleto: string) => {
+const getAmount48 = (boleto: string) => {
   const amountStr = boleto.substring(5, 11) + boleto.substring(12, 16)
   const amountInt = parseInt(amountStr)
 
@@ -188,7 +188,7 @@ const convenioGetAmount = (boleto: string) => {
   return amount
 }
 
-const tituloGetAmount = (boleto: string) => {
+const getAmount47 = (boleto: string) => {
   const amountStr = boleto.substring(37, 47)
   const amountInt = parseInt(amountStr)
 
@@ -196,7 +196,7 @@ const tituloGetAmount = (boleto: string) => {
   return amount
 }
 
-const convenioGetExpDate = (boleto: string) => {
+const getExpDate48 = (boleto: string) => {
   const dueStr = boleto.substring(26, 34)
 
   const year = dueStr.substring(0, 4)
@@ -220,7 +220,7 @@ const convenioGetExpDate = (boleto: string) => {
   return expirationDate
 }
 
-const tituloGetExpDate = (boleto: string) => {
+const getExpDate47 = (boleto: string) => {
   const dueStr = boleto.substring(33, 37)
   const dueInt = parseInt(dueStr)
 
@@ -240,14 +240,14 @@ const tituloGetExpDate = (boleto: string) => {
   return expirationDate
 }
 
-export const validateConvenio = (boleto: string) => {
-  convenioValidateDV(boleto)
+export const validate48 = (boleto: string) => {
+  validateDV48(boleto)
 
-  const barCode = convenioGetBarcode(boleto)
+  const barCode = getBarcode48(boleto)
 
-  const amount = convenioGetAmount(boleto)
+  const amount = getAmount48(boleto)
 
-  const expirationDate = convenioGetExpDate(boleto)
+  const expirationDate = getExpDate48(boleto)
 
   return {
     barCode,
@@ -256,14 +256,14 @@ export const validateConvenio = (boleto: string) => {
   }
 }
 
-export const validateTitulo = (boleto: string) => {
-  tituloValidateDV(boleto)
+export const validate47 = (boleto: string) => {
+  validateDV47(boleto)
 
-  const barCode = tituloGetBarcode(boleto)
+  const barCode = getBarcode47(boleto)
 
-  const amount = tituloGetAmount(boleto)
+  const amount = getAmount47(boleto)
 
-  const expirationDate = tituloGetExpDate(boleto)
+  const expirationDate = getExpDate47(boleto)
 
   return {
     barCode,
@@ -276,11 +276,11 @@ export const validateBoleto = (boleto: string) => {
   const type = getType(boleto)
 
   switch (type) {
-    case 'titulo':
-      return validateTitulo(boleto)
+    case '47':
+      return validate47(boleto)
 
-    case 'convenio':
-      return validateConvenio(boleto)
+    case '48':
+      return validate48(boleto)
 
     default:
       throw new CustomError('Invalid boleto', ['type'])

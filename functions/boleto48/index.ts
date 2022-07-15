@@ -1,14 +1,14 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
-import { validateTitulo } from '../../utils/boleto'
+import { validate48 } from '../../utils/boleto'
 import { errorResponse, responseClient } from '../../utils/response'
-import inputValidate from '../../validate/boletotitulo'
+import inputValidate from '../../validate/boleto48'
 
-export const boletoTitulo = async (event: APIGatewayProxyEventV2) => {
+export const boleto48 = async (event: APIGatewayProxyEventV2) => {
   try {
     inputValidate(event)
     const { boletoDigits = '' } = event?.pathParameters || {}
 
-    const data = validateTitulo(boletoDigits)
+    const data = validate48(boletoDigits)
     return responseClient(data)
   } catch (error) {
     return errorResponse(error)

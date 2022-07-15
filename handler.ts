@@ -1,3 +1,3 @@
-import { boleto, boletoConvenio, boletoTitulo } from './functions'
+import { boleto, boleto47, boleto48 } from './functions'
 
-export { boleto, boletoConvenio, boletoTitulo }
+export { boleto, boleto47, boleto48 }

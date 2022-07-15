@@ -1,5 +1,5 @@
 import { boleto } from './boleto'
-import { boletoConvenio } from './boletoConvenio'
-import { boletoTitulo } from './boletoTitulo'
+import { boleto47 } from './boleto47'
+import { boleto48 } from './boleto48'
 
-export { boleto, boletoConvenio, boletoTitulo }
+export { boleto, boleto47, boleto48 }

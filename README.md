@@ -11,13 +11,13 @@ Boleto (any length)
 
 `https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto/{boletoDigits}`
 
-Boleto convênio (length 48)
+Boleto 48 (length 48)
 
-`https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto-convenio/{boletoDigits}`
+`https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto-48/{boletoDigits}`
 
-Boleto título (length 47)
+Boleto 47 (length 47)
 
-`https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto-titulo/{boletoDigits}`
+`https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto-47/{boletoDigits}`
 
 ### LOCAL
 

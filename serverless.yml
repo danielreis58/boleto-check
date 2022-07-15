@@ -14,18 +14,18 @@ functions:
       - httpApi:
           method: get
           path: /boleto/{boletoDigits}
-  boleto-convenio:
-    handler: handler.boletoConvenio
+  boleto-48:
+    handler: handler.boleto48
     events:
       - httpApi:
           method: get
-          path: /boleto-convenio/{boletoDigits}
-  boleto-titulo:
-    handler: handler.boletoTitulo
+          path: /boleto-48/{boletoDigits}
+  boleto-47:
+    handler: handler.boleto47
     events:
       - httpApi:
           method: get
-          path: /boleto-titulo/{boletoDigits}
+          path: /boleto-47/{boletoDigits}
 
 plugins:
   - serverless-plugin-typescript

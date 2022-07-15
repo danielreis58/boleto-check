@@ -13,8 +13,8 @@ paths:
     get:
       tags:
         - Endpoints
-      summary: "Validate boleto convênios and boleto títulos"
-      description: "This api validates boleto convênios (48 length) and boletos títulos (47 length)"
+      summary: "Validate boleto 48 and boleto 47"
+      description: "This api validates boleto 48 (48 length) and boletos 47 (47 length)"
       produces:
         - "application/json"
       parameters:
@@ -40,12 +40,12 @@ paths:
                 type: "integer"
               data:
                 $ref: "#/definitions/Error"
-  /boleto-convenio/{boletoDigits}:
+  /boleto-48/{boletoDigits}:
     get:
       tags:
         - Endpoints
-      summary: "Validate boleto convênios"
-      description: "This api validates boleto convênios (48 length)"
+      summary: "Validate boleto 48"
+      description: "This api validates boleto 48 (48 length)"
       produces:
         - "application/json"
       parameters:
@@ -71,12 +71,12 @@ paths:
                 type: "integer"
               data:
                 $ref: "#/definitions/Error"
-  /boleto-titulo/{boletoDigits}:
+  /boleto-47/{boletoDigits}:
     get:
       tags:
         - Endpoints
-      summary: "Validate boleto títulos"
-      description: "This api validates boleto títulos (47 length)"
+      summary: "Validate boleto 47"
+      description: "This api validates boleto 47 (47 length)"
       produces:
         - "application/json"
       parameters:
