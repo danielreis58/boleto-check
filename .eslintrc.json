@@ -9,7 +9,8 @@
     "prettier"
   ],
   "parserOptions": {
-    "project": "boleto-check/tsconfig.json"
+    "project": "tsconfig.json",
+    "sourceType": "module"
   },
   "rules": {
     "prettier/prettier": [
