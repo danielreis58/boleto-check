@@ -32,3 +32,8 @@ npm install
 ```sh
 npx serverless offline
 ```
+
+### TEST REPORT
+
+![Test report](/test_coverage_16-07-2022.png "Test report")
+
