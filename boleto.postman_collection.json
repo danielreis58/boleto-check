@@ -1,0 +1,127 @@
+{
+  "info": {
+    "_postman_id": "446b8a25-cfd1-4470-9dce-2ebdcca06f0b",
+    "name": "Boleto",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "20914838"
+  },
+  "item": [
+    {
+      "name": "boleto",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto/858700000006374303852227010701221922521789373054",
+          "protocol": "https",
+          "host": [
+            "9ughgxcbd0",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": ["boleto", "858700000006374303852227010701221922521789373054"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "boleto-48",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto-48/846700000017435900240209024050002435842210108119",
+          "protocol": "https",
+          "host": [
+            "9ughgxcbd0",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "boleto-48",
+            "846700000017435900240209024050002435842210108119"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "boleto-47",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://9ughgxcbd0.execute-api.us-east-1.amazonaws.com/boleto-47/34191090080555272866832215240006390430000839517",
+          "protocol": "https",
+          "host": [
+            "9ughgxcbd0",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "boleto-47",
+            "34191090080555272866832215240006390430000839517"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "boletoLOCAL",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/boleto/858700000006374303852227010701221922521789373054",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["boleto", "858700000006374303852227010701221922521789373054"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "boleto-48LOCAL",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/boleto-48/846700000017435900240209024050002435842210108119",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": [
+            "boleto-48",
+            "846700000017435900240209024050002435842210108119"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "boleto-47LOCAL",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/boleto-47/34191090080555272866832215240006390430000839517",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": [
+            "boleto-47",
+            "34191090080555272866832215240006390430000839517"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
