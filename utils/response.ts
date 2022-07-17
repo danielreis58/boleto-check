@@ -23,11 +23,13 @@ export const errorResponse = (error: unknown) => {
   let details: string[] = []
 
   // FOR DEBUGGING
+  /* 
   console.log(
     'ERROR ========================>',
     error,
     '<======================== ERROR'
   )
+  */
 
   if (error instanceof CustomError) {
     code = error.statusCode

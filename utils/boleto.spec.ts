@@ -162,4 +162,21 @@ describe('Boleto', () => {
     }
     expect(t).toThrow(CustomError)
   })
+
+  it('boleto47 after 23/02/2025', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2025-02-23'))
+
+    const test = {
+      number: '74593680101400601787650091731054390240000080000',
+      barCode: '74593902400000800003680114006017875009173105',
+      amount: 800,
+      expirationDate: '2049-11-07'
+    }
+
+    const boleto = validateBoleto(test.number)
+
+    expect(boleto.barCode).toBe(test.barCode)
+    expect(boleto.amount).toBe(test.amount)
+    expect(boleto.expirationDate).toBe(test.expirationDate)
+  })
 })
